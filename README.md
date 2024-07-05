@@ -4,8 +4,8 @@
 
 # Reference
 Github
-https://github.com/youngguncho/PoseNet-Pytorch
-https://github.com/RobustFieldAutonomyLab/LeGO-LOAM
+- https://github.com/youngguncho/PoseNet-Pytorch
+- https://github.com/RobustFieldAutonomyLab/LeGO-LOAM
 
 # Interim report
 - ROS1 Tutorial
@@ -17,9 +17,6 @@ https://github.com/RobustFieldAutonomyLab/LeGO-LOAM
 - LeGO-LOAM settings
 
 # To-do lists
-- Creating Ground-Truth
-Matching 6-dof-pose and image by using SLAM(LeGO-LOAM)
-Use time_synchronizer
+- Creating Ground-Truth: Matching 6-dof-pose and image by using SLAM(LeGO-LOAM), Use time_synchronizer
 - Train data by using PoseNet-Pytorch
-- Creating ROS node(Visual Localization Node)
-Run test_dataset and visualize(rviz) GT-pose and Predict-pose in real-time
+- Creating ROS node(Visual Localization Node): Run test_dataset and visualize(rviz) GT-pose and Predict-pose in real-time
