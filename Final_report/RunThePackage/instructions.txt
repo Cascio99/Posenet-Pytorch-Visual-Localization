@@ -1,0 +1,4 @@
+$ roslaunch lego_loam run.launch
+$ rosbag play *.bag --clock --topic /zed/left/image_rect_color/compressed
+$ rviz
+$ rqt_graph
