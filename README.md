@@ -13,7 +13,7 @@ Github
 - PoseNet-Test: ROS node(publisher)
 
 # Final report
-- PoseNet-Test: ROS node(publihser)
+- PoseNet-Test: ROS node(publisher)
 - LeGO-LOAM settings
 
 # To-do lists
