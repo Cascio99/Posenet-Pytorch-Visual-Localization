@@ -1,0 +1,17 @@
+# /imu_odom을 subscribe하도록 synchronizer.py 수정
+
+$ cd ~/catkin_ws/src
+$ catkin_create_pkg synchronizer rospy cv_bridge tf message_filters sensor_msgs
+$ cd synchronizer/src && touch synchronizer.py && chmod +x synchronizer.py
+synchronizer.py 수정
+$ cd ~/catkin_ws && catkin_make -j1
+
+$ roslaunch lego_loam run.launch
+$ cd ~/AIR/data
+$ rosrun synchronizer synchronizer.py
+$ rosbag play */2017-12-05-13-23-48.bag --clock #train
+train 완료되면 주석 참고해서 synchronizer.py 수정하고(line12 ~ 13)
+"rosrun 터미널 창 재실행"
+$ rosbag play */2017-12-05-14-34-52.bag --clock #test
+
+# /odom과 /zed/odom과 다르게 에러는 없고, 경고문도 train 데이터 제작할 때 4줄만 발생(GT_terminal.png)

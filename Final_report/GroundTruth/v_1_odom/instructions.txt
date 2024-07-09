@@ -1,0 +1,64 @@
+FIX run.launch, LeGO-LOAM/LeGO-LOAM/CMakeLists.txt, LeGO-LOAM/LeGO-LOAM/package.xml
+ADD LeGO-LOAM/LeGO-LOAM/src/synchronizer.py
+REBUILD catkin
+
+$ cd ~/catkin_ws
+$ catkin_make -j1
+$ roslaunch lego_loam run.launch
+
+catkin_make -j1까지는 실행됐지만, roslaunch 실행시 synchronizer 노드 만들지 못하는 에러 발생(backup 폴더 참고)
+roslaunch를 통해서 한번에 모든 노드 실행하는 방법 시도 ==> rosrun하는 방식으로 변경
+
+-reference
+https://github.com/kyeonghyeon0314/AirLAB_toy_project/blob/main/synchronizing/scripts/image_pose_synchronizer.py
+https://velog.io/@choonsik_mom/ROS-python-%EA%B8%B0%EC%B4%88-messagefilter%EB%A1%9C-Timestamp-%EB%8F%99%EA%B8%B0%ED%99%94%ED%95%98%EA%B8%B0
+https://gist.github.com/wngreene/835cda68ddd9c5416defce876a4d7dd9
+
+
+=============================================================
+rosrun synchronizer synchronizer.py 하는 방식으로 변경
+time sync 필요한 이유(두 토픽의 시간 스탬프가 다른 이유)
+센서 데이터 획득 시점과 bag파일 재생 시점이 다르기 때문?(https://velog.io/@zzziito/ROS-Message-Filter-Approximate-Time-Callback-error)
+ApproximateTimeSynchronizer의 slop 인자 조절(0.1)
+
+$ cd ~/catkin_ws/src
+$ catkin_create_pkg synchronizer rospy cv_bridge tf message_filters sensor_msgs
+$ cd synchronizer/src && touch synchronizer.py && chmod +x synchronizer.py
+synchronizer.py 수정
+$ cd ~/catkin_ws && catkin_make -j1
+
+$ roslaunch lego_loam run.launch
+$ cd ~/AIR/data
+$ rosrun synchronizer synchronizer.py
+$ rosbag play */2017-12-05-13-23-48.bag --clock #train
+train 완료되면 주석 참고해서 synchronizer.py 수정하고(line12 ~ 13)
+"rosrun 터미널 창 재실행"
+$ rosbag play */2017-12-05-14-34-52.bag --clock #test
+
+
+
+=====unsolved questions==========
+1. /odom, /imu_odom, /zed/odom 중에 어떤 토픽을 사용해야 하는지 불확실.
+==> /zed/odom 메시지 개수가 /zed/left/image_rect_color/compressed 메시지 개수와 가장 비슷하지만,
+일반적인 것처럼 보이는 /odom 사용함
+
+2. rviz에서 /zed/odom/Odometry 추가하면
+"Transform [sender=unknown_publisher]
+For frame [/zed_initial_frame]: Frame [/zed_initial_frame] does not exist"
+에러 뜨고,
+터미널 roslaunch창에는 
+Invalid argument "/zed_initial_frame" passed to canTransform argument source_frame in tf2 frame_ids cannot start with a '/' like:
+경고 뜸
+
+비슷하게 rviz에서 /odom 추가하면
+"Transform [sender=unknown_publisher]
+For frame [odom]: Frame [odom] does not exist"
+에러 발생
+
+GT 제작 후 만들어진 image 개수가 /odom의 개수와 각각 trian과 test에서 동일하게 나옴.(dataset_train.png, dataset_test.png)
+
+***Debugging***
+synchronizer.py line33에 ".png" 안 붙였었음.
+line28부터 재실행
+
+==== v2 생성으로 인해 v1에서 만든 데이터 폴더 data -> data_0 으로 이름 변경 ===
