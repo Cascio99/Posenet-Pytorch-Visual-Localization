@@ -1,0 +1,16 @@
+LeGO-LOAM/LeGO-LOAM/src cpp파일들 속 "/camera", "/camera_init" --> "camera", "camera_init"으로 수정
+==> Works for LeGO-LOAM
+1. Follow Final_report/TroubleShooting/setting_instructions.txt
+2. Follow fix_src.txt
+
+-reference
+https://github.com/t0mark/ROS/tree/main/Lego-Loam/catkin_ws/src/LeGO-LOAM/LeGO-LOAM/src
+https://blog.csdn.net/weixin_44156680/article/details/118070387
+
+$ cd ~/catkin_ws
+$ catkin_make -j1       # 잘 안 되는 경우 $ catkin_make --only-pkg-with-deps lego_loam -j1
+$ roslaunch ..
+$ rosbag play train.bag --clock --topic /velodyne_points /imu/data
+
+* rviz에서 point cloud 다 쌓이도록 출력하는 법
+display type: Map Cloud (stack)의 Decay Time을 10000 s 정도로 늘리기

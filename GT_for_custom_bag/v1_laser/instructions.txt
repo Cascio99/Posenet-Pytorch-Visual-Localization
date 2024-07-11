@@ -1,0 +1,32 @@
+look at featureAssociation.cpp
+
+
+step 1) Final_report/GT_1st_trial/v_2_odom 참고해서 synchronizer 패키지 빌드
+
+$ cd ~/catkin_ws/src
+$ catkin_create_pkg synchronizer rospy cv_bridge tf message_filters sensor_msgs
+$ cd synchronizer/src && touch synchronizer.py && chmod +x synchronizer.py
+$ gedit synchronizer/package.xml    # fix...
+$ gedit synchronizer/CMakeLists.txt # fix...
+$ cd ~/catkin_ws/src/synchronizer/src
+$ gedit synchronizer.py             # fix...
+$ chmod +x synchronizer.py
+$ cd ~/catkin_ws
+$ catkin_make --only-catkin_create_pkg synchronizer
+
+
+* topics to subscribe...
+- pose topic name: "/laser_odom_to_init" type: "/nav_msgs/Odometry" ==> from LeGO-LOAM
+- image topic name: "/zed/left/image_rect_color/compressed" type: "/sensor_msgs/CompressedImage" --> from bag file
+
+
+$ roslaunch lego_loam run.launch
+$ cd ~/AIR/data # go to data storage
+$ rosrun synchronizer synchronizer.py
+$ rosbag play */2017-12-05-13-23-48.bag --clock --topic /velodyne_points /imu/data /zed/left/image_rect_color/compressed #train --> GT_train.webm
+fix synchronizer.py (line 12 ~ 13)
+"rosrun 터미널 창 재실행"
+$ rosbag play */2017-12-05-14-34-52.bag --clock --topic /velodyne_points /imu/data /zed/left/image_rect_color/compressed #test
+
+GT_train.png ==> train dataset(bag)의 /velodyne_points 토픽의 메시지 개수(11514)와 비슷한 11512개의 image, pose 정보 제작됨
+GT_test.png ==> test dataset(bag)의 /velodyne_points 토픽의 메시지 개수(9791)와 비슷한 9788개의 image, pose 정보 제작됨

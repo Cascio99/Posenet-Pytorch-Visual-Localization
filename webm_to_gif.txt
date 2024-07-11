@@ -1,0 +1,3 @@
+https://askubuntu.com/questions/506670/how-to-do-i-convert-an-webm-video-to-a-animated-gif-on-the-command-line
+$ ffmpeg -y -i input.webm -vf palettegen palette.png
+$ ffmpeg -y -i input.webm -i palette.png -filter_complex paletteuse -r 10 output.gif
