@@ -12,6 +12,6 @@ $ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt
 
 --> overall pose error가 여전히 너무 큼(orientation은 4 정도로 괜찮은데, position이 100 정도임)
 마지막 9789th Error: pose error는 29.718로 줄어든 것으로 보이므로 `--num_epochs 100` 옵션을 빼고 400 epoch으로 train 진행해보기
-=> 기존 data, models_data 폴더 이름 변경 -> "data_01", "models_data_01"
+=> 기존 models_data 폴더 이름 변경 -> "models_data_01"
 
 line3부터 재실행(line5: `python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt` )
