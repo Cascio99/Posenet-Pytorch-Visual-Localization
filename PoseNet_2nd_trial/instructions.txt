@@ -15,3 +15,15 @@ $ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt
 => 기존 models_data 폴더 이름 변경 -> "models_data_01"
 
 line3부터 재실행(line5: `python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt` )
+$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --pretrained_model 100
+# 일단 150 epoch만 학습시킨 결과 확인해보기
+
+# 기존 모델들 모두 삭제 후 진행: rm -r models_data
+**** over-fitting(train_dataset 모르는 상태에서 과하게 train_dataset에만 fitting) 의심됨: num_epochs, dropout_rate 조절 *****
+1. --num_epochs 50 --dropout_rate 0.6 (default: 0.5 흔히 0.2 ~ 0.5 사이 사용함:= layer에서 얼마나 학습에서 제외시키는지의 비율)
+$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 50 --dropout_rate 0.6
+$ tensorboard --logdir ./summary_data
+$ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt
+
+
+================ PoseNet_3rd_trial로 이동 =================

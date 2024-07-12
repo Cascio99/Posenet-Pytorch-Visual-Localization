@@ -1,0 +1,16 @@
+# 기존 모델들 모두 삭제 후 진행: rm -r models_data
+**** over-fitting(train_dataset 모르는 상태에서 과하게 train_dataset에만 fitting) 의심됨: num_epochs, dropout_rate 조절 *****
+1. --num_epochs 50 --dropout_rate 0.6 (default: 0.5 흔히 0.2 ~ 0.5 사이 사용함:= layer에서 얼마나 학습에서 제외시키는지의 비율)
+$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 50 --dropout_rate 0.6
+$ tensorboard --logdir ./summary_data
+# 학습 후 http://localhost:6006/ 에서 그래프 확인
+$ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt
+
+!!! 조금 줄어들긴 했지만, 여전히 overall median(& average) pose error중 postition error가 너무 큼(100)
+--> --test_model best 옵션으로 해도 비슷함
+
+--> """    position 예측을 너무 못하므로 dropout_rate 높여보기로 함.   """
+
+# 기존 모델(models_data 폴더 이름: "models_data_03"로 변경)
+--> 4th_trial: dropout_rate: 0.7, --model_save_step 25 (혹시 모를 학습 중단을 위해서)
+python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 50 --dropout_rate 0.7 --

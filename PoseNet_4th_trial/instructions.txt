@@ -1,0 +1,20 @@
+4th_trial: dropout_rate: 0.7, --model_save_step 25 (혹시 모를 학습 중단을 위해서)
+
+
+$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 50 --dropout_rate 0.7 --model_save_step 25
+
+$ tensorboard --logdir ./summary_data
+
+$ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt
+--> 여전히 position error가 너무 큼...
+
+test.py:data_loader() 보니까 --dropout_rate은 적용 안 되는 듯함. --> 5th_trial
+"""#################################################################################"""
+--> change default parameters in """model.py:Line74"""
+    def __init(self, base_model, fixed_weight=False, dropout_rate=0.5, bayesian=False):
+re-training...
+$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 50 --model_save_step 25
+
+$ tensorboard --logdir ./summary_data
+
+$ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt
