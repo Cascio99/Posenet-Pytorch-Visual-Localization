@@ -14,3 +14,9 @@ $ rosbag play train.bag --clock --topic /velodyne_points /imu/data
 
 * rviz에서 point cloud 다 쌓이도록 출력하는 법
 display type: Map Cloud (stack)의 Decay Time을 10000 s 정도로 늘리기
+
+***0715**rebuild after Ubuntu reinstallation
+WARNING: Target "mapOptmization" requests linking to directory "/usr/include".  Targets may link only to libraries.  CMake is dropping the item.
+WARNING: Target "mapOptmization" requests linking to directory "/usr/include".  Targets may link only to libraries.  CMake is dropping the item.
+
+$ sudo apt-get install libparmetis-dev

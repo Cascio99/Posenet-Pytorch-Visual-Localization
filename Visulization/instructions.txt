@@ -1,3 +1,0 @@
-marker_ex: https://winterbloooom.github.io/robotics/ros/2022/08/29/rviz_module.html
-
-July 15th: ubuntu_reinstalled

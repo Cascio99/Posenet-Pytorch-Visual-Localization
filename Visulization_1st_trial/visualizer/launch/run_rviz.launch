@@ -1,0 +1,5 @@
+<launch>
+    
+    <node pkg="visualizer" type="rviz_node.py"    name="rviz_node"    output="screen"/>
+
+</launch>
