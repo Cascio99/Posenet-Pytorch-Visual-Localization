@@ -1,5 +1,0 @@
-fix solver.py
-$ roscore
-$ cd ~/catkin_ws/src/topic_test/src
-$ rosrun topic_test test.py --image_path ./posenet/KingsCollege --metadata_path ./posenet/KingsCollege/dataset_test.txt
-$ rqt_graph

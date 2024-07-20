@@ -1,0 +1,17 @@
+1. Creating Ground-Truth
+- Matching 6-dof-pose and image by using SLAM(LeGO-LOAM)
+- Use time_synchronizer
+======Can't understand 'time_synchronizer'=====
+Q1) Change source files in LeGO-LOAM/LeGO-LOAM?
+- reference
+message_filters_ time_synchronizer.h.png
+http://docs.ros.org/en/indigo/api/message_filters/html/c++/time__synchronizer_8h.html
+
+Q2) Change options instead of '$ roslaunch lego_loam run.launch' or '$ rosbag play *.bag'(rosbag_play_-h.png)?
+
+
+2. Train data by using PoseNet-Pytorch(ex. change --num_epochs to about 100)
+
+
+3. Creating ROS node(Visual Localization Node)
+- Run test_dataset and visualize(rviz) GT-pose and Predict-pose in real-time

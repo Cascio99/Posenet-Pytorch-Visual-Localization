@@ -1,0 +1,23 @@
+# test할 때 overall error가 매우 큰 이유 분석(미해결)
+*** 우선 synchronizer.py에서 txt 파일에 orientation 정보 저장하는 순서 틀렸었음 ***
+--> look at poses, quat_to_euler(), pos_true, ori_true @ solver.py: pos: poses[:,:3], ori: poses[:,3:] ==> orientation(x,y,z) starts w. "4th index"
+--> look at quat_to_euler() @ solver.py, pose_utils.py
+
+
+* topics to subscribe...
+look at transformFusion.cpp
+- pose topic name: "/integrated_to_init" type: "/nav_msgs/Odometry" ==> from LeGO-LOAM
+- image topic name: "/zed/left/image_rect_color/compressed" type: "/sensor_msgs/CompressedImage" --> from bag file
+
+
+$ roslaunch lego_loam run.launch
+# go to data storage
+$ cd ~/AIR/data
+$ rosrun synchronizer synchronizer.py
+$ rosbag play */2017-12-05-13-23-48.bag --clock --topic /velodyne_points /imu/data /zed/left/image_rect_color/compressed
+# fix synchronizer.py (line 12 ~ 13)
+# "rosrun 터미널 창 재실행"
+$ rosbag play */2017-12-05-14-34-52.bag --clock --topic /velodyne_points /imu/data /zed/left/image_rect_color/compressed
+
+GT_train.png ==>  11512(v2_integrated보다 1개 증가) 개의 image, pose 정보 제작됨
+GT_test.png ==>  9790(v2와 동일) 개의 image, pose 정보 제작됨

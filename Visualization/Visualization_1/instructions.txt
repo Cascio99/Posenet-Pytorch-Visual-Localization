@@ -1,0 +1,22 @@
+marker_ex: https://winterbloooom.github.io/robotics/ros/2022/08/29/rviz_module.html
+
+July 15th: reinstalled ubuntu(graphic-driver issue; couldn't boot)
+-ref: https://sseongju1.tistory.com/10#google_vignette
+* rtx 2060: nvidia-driver-535
+
+1st step: 
+@@ Create ROS node while lego_loam's running.
+@@ ROS node: pose(read from dataset_test.txt. NOT predicted pose while testing) marker
+
+Publisher: /rviz_node
+topic: /train_marker
+
+$ cd catkin_ws/src
+$ catkin_create_pkg visualizer rospy roscpp std_msgs sensor_msgs visualization_msgs
+$ cd ..
+# make src/rviz_node.py, CMakeLists.txt, package.xml, launch/run_rviz.launch
+$ catkin_make --only-pkg-with-deps visualizer
+
+$ roslaunch visualizer run_viz.launch
+$ rviz
+# Add Marker, change topic

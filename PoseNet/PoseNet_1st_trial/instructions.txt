@@ -1,0 +1,23 @@
+LeGO-LOAM을 통해 수집한 data로 PoseNet-Pytorch에 학습하기
+
+Final_report/posenet-pytorch_1st_trial/instructions.txt 참고
+KingsCollege 데이터 대신 data 폴더 사용
+# cd ~/ ..
+# 원래 400 epoch이지만, 100 epoch만 학습하도록 옵션 변경
+$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 100
+$ tensorboard --logdir ./summary_data # 학습 후 http://localhost:6006/ 에서 그래프 확인
+
+
+$ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt  # Load pretrained model:  models_data/49_net.pth
+--> pos_error가 너무 커보임: topic 다시 살펴보기
+nav_msgs::Odometry 타입인 토픽: 3개 존재(rviz상에서 r,g,b로도 표현. look at laser_aft_integrated_rviz.png)
+1. laser_odom_to_init: r
+2. aft_mappedt_to_init: g
+3. integrated_to_init: b
+look at laser_aft_integrated.png
+--> rviz상에서 laser_odom_to_init만 나머지 둘(aft.., inte..)과 찍히는 곳이 달라서 그런 것으로 추정
+--> aft_mappedt_to_init는 받게 되는 message 수가 너무 적어보임
+--> integrated_to_init 토픽이 받는 message 수는 laser_odom_to_init과 동일해 보임
+
+===> "integrated_to_init"를 사용해서 GT 제작
+laser_odom_to_init를 학습할 때 썼던 "data" 폴더는 "data_laser"로 변경.(models_data 폴더 이름 변경하는 거 잊음)

@@ -1,8 +1,0 @@
-$ python3 train.py --image_path ./data --metadata_path ./data/dataset_train.txt --num_epochs 100
-$ tensorboard --logdir ./summary_data # 학습 후 http://localhost:6006/ 에서 그래프 확인
-$ python3 test.py --image_path ./data --metadata_path ./data/dataset_test.txt  # Load pretrained model:  models_data/49_net.pth
-## Q) KingsCollege 데이터로 test한 결과(interim_report.pdf)에 비해서 pos error가 너무 큰 것 같음.(go to Final_report/v_1)
-### Todo: odom_imuodom_zedodom.png와 비교했을 때 /imu_odom과 비슷하기 떄문에 /odom이 아닌 /imu_odom을 subscribe하는 방식으로 GT 다시 제작(--num_epochs 50)
-
-
-## rosrun topic_test test.py --image_path ./data --metadata_path ./data/dataset_test.txt

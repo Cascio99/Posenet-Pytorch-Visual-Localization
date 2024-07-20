@@ -1,0 +1,92 @@
+ROS Node name: /posenet_node
+- Subscrbie: /image
+- Publish: /posenet_pytorch type: pose
+
+fix rviz_node.py
+/rviz_node
+- Subscrbie: /posenet_node from /posenet_pytorch(Pose)
+- Publish: /pred_marker(Marker) calculated by pose.pose.position
+
+Outline...
+1. /posenet_node: solver.py의 test() 안에서 제작
+2. /image_node는 별도의 파일(talker.py)에서 제작 --> solver.test()의 for문 속 data_loader 참고
+3. rvnz_node 수정
+4. rviz_config.rviz 만들어서 roslaunch 실행 시 한번에 시각화되도록 설정하기(launch 폴더 속에 rviz_config.rviz 추가, run_rviz.launch 수정) --> 오픈소스 참고(LeGO-LOAM, rvia_template)
+
+Progress...(rate.sleep()시 빠른 확인을 위해 100 Hz 이용)
+패키지 수정될 때마다 catkin_make --only-pkg-with-deps visualizer 실행
+1. data_publish_node.py 구현 및 rviz_node.py 수정 완료
+2. posenet_node.py 구현 (실행 보류)
+    --> GT_3rd_trial 완료 (PoseNet_6th_trial 예정)
+    --> 진행하면서 image_node 구현
+3. image_node.py 구현
+--> 2로 돌아가서 posenet_pytorch, image_node는 별개로 rosrun하도록 변경
+roslaunch로 한번에 해보려했지만, test.py 실행시 인자 이슈 발생(error_posenet_node.png)
+
+    $ cd ~/catkin_ws/src
+    $ catkin_create_pkg posenet_pytorch cv_bridge rospy roscpp std_msgs sensor_msgs visualization_msgs geometry_msgs
+    $ catkin_make --only-pkg-with-deps posenet_pytorch
+
+인자 이슈 발생한 이유 알 듯함(using argparse @roslaunch...)
+-ref
+https://answers.ros.org/question/364599/how-to-write-proper-launch-file-by-passing-arguments/
+https://discourse.ros.org/t/getting-python-argparse-to-work-with-a-launch-file-or-python-node/10606
+
+test.py:Line74
+config=parser.parse_args() -> config=parser.parse_args(sys.argv[10:])
+
+node making: done. complete_nodes.png
+
+***GT_marker, train_marker 따로 구현해서 시각화: 성공*** only_GT.png, only_pred.png
+GT, pred 같이 구현한 상태로 실행하면 rviz 자주 꺼짐
+
+1. image_node publish속도가 너무 빠름. --> rospy.sleep(3)
+==> posenet_node가 subscribe 기다리기 시작한 이후부터 image_node가 image를 publish하도록
+
+2. GT_marker, pred_marker 따로 구현해서 시각화하면 잘 되는데, 같이 시각화되도록 하면, 둘 다 GT_marker로만 인식해서 시각화됨(파랑, 초록 점 겹침)
+rospy.__init()할 때 anonymous=False?: 아님
+sol2) MarkerArray?
+
+
+
+콜백함수에서 mark()하는 부분을 m1.mark~, m2.mark~가 아니라 self.mark~로 하고 있었음....
+image_node idx: 1부터인데, 0부터 시작해서 에러 떴음
+
+
+************ queue_size(qs), sleep(), spin() ***************
+### spin(): subscribe해야 하는 경우 쓰는 것 권장
+
+<<<<<<<<<<<<<< Visualization 성공 ( visualizing_.png, visualization.png ) >>>>>>>>>>>>>>>>>>>
+$ cd ~/catkin_ws/src
+$ catkin_create_pkg visualizer rospy roscpp cv_bridge std_msgs sensor_msgs visualization_msgs geometry_msgs
+### posenet_pytorch 폴더 통째로 catkin_ws/src/visualizer/src에 복사하고 test.py, solver.py 수정
+#### launch/run_rviz.launch, launch/rviz_config.rviz, CMakeLists.txt, package.xml 수정
+$ cd ~/catkin_ws
+$ catkin_make --only-pkg-with-deps visualizer
+
+$ roslaunch visualizer run_rviz.launch
+# rqt_graph
+====================================================== OUTLINE ===============================================================
+
+
+                            data_publish_node   ->
+                                                        rviz_node
+        image_node    ->       posenet_node     ->
+
+
+image_node: qs=0(inf), sleep(65 s) > sleep(200 Hz)
+data_publish_node: qs=0, sleep(65 s) > sleep(200 Hz)
+
+posenet_node: qs=100, spin()
+rviz_node: qs=100, spin()
+
+
+* image_node, data_publish_node에서 처음에 rospy.sleep(65)하는 이유: solver.py에서 list(self.data_loader) 작업 시간 때문
+
+TODO: time-sync, GT
+1. 아직 시간 동기화를 정밀하게 맞추지는 못함 ( results/roslaunch.gif ) --> sleep(), spin() 조절해보기
+2. rviz 상에서 GT와 pred의 좌표가 뒤바뀐 게 한 눈에 보이듯이 GT 제작에 뭔가 문제가 있어 보임
+==> 우선 synchronizer.py에서 orientation의 순서를 x,y,z,w로 했어야 됐는데, w,x,y,z로 저장해서 subscribe함.
+====> 다시 GT 제작 후 차이점을 비교해봤지만, posenet 학습에서 알 수 있었듯이 크게 다르지는 않음
+    2-2. GT 제작에는 문제가 없고, 센서가 잘못 측정한 것일 수도 있음.
+    =====> LeGO-LOAM의 rosbag play할 때 " rostopic echo /integrated_to_init " 을 보면 position의 x,y 좌표가 아닌 z 좌표값이 비정상적으로 커짐

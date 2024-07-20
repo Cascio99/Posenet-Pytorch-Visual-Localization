@@ -1,0 +1,15 @@
+posenet_test error 큰 이유 분석...
+
+rviz로 시각화해본 결과, (mark_dataset_test.png, mark_dataset_train.png 참고)
+
+1. 학습 시(train)에는 y 좌표(pose.position.y)와 z 좌표가 바뀐 상태로 GT가 제작된 것처럼 보임
+2. 추론 시(test)에는 x 좌표와 z 좌표가 바뀐 상태로 GT가 제작된 것처럼 보임
+
+
+TODO
+1. GT 제작을 위해 만든 synchronizer.py 및 synchronizer 패키지에 오류 유무 확인
+--> July 16: 없는 것 같긴 함
+2. posenet 코드, 특히 pose로부터 position과 orientation 계산되는 부분 더 자세히 분석
+: pose_utils.py, solver.py, ...
+
+3. 위 내용들 바탕으로 GT 다시 제작하기(synchronizer 수정: GT_3rd_trial 생성)

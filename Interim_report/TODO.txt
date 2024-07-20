@@ -1,3 +1,0 @@
-Node only publish 6-DOF pose output.
-
-Node should "subscribe image" and publish 6-DOF pose output.
