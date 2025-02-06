@@ -45,5 +45,8 @@ log file: /home/ysw/.ros/log/c6a496b4-e392-11ef-872c-417ce006fd71/mapOptmization
 
 $ sudo apt-get install libparmetis-dev
 
-2. change framde id "/camera_init" to "camera_init" in mapOptimization.cpp
+2. change framde id "/camera_init" to "camera_init" in
+mapOptimization.cpp
 --> Line259, 262, 698, 706, 719, 793, 867, 913
+featureAssociation.cpp
+--> Line793, 800, 807, 811
